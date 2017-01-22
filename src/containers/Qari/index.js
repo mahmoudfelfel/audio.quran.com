@@ -8,10 +8,7 @@ import Button from 'react-bootstrap/lib/Button';
 import Helmet from 'react-helmet';
 import { load, play, next, random} from 'actions/audioplayer';
 import { load as loadFiles } from 'actions/files';
-import zeroPad from 'utils/zeroPad';
-import formatSeconds from 'utils/formatSeconds';
-import Track from 'components/Audioplayer/Track';
-import LinkContainer from 'utils/LinkContainer';
+import SurahList from 'components/SurahList';
 const styles = require('./style.scss');
 
 class Qaris extends Component {
@@ -40,7 +37,7 @@ class Qaris extends Component {
   }
 
   render() {
-    const { surahs, qari, files, currentSurah, isPlaying, shouldRandom, currentQari, currentTime, progress } = this.props;
+    const { surahs, qari, files, currentSurah, isPlaying, shouldRandom } = this.props;
 
     const handlePlayAll = () => {
       this.props.random();
@@ -52,11 +49,6 @@ class Qaris extends Component {
     };
 
     const description = qari.description ? qari.description : '';
-    const currentSurahTime = (surah) => {
-      return (surah.id === currentSurah.id) ? `${formatSeconds(currentTime)} / ` : '';
-    };
-
-    const progressBarStyle = {position: 'absolute', bottom: '-5px', height: '2px'};
 
     return (
       <div>
@@ -86,68 +78,7 @@ class Qaris extends Component {
           <Row>
             <Col md={11} mdOffset={1}>
               <div className={`panel panel-default ${styles.panel} ${isPlaying ? styles.panelPlaying : ''}`}>
-                <ul className="list-group">
-                  {
-                    Object.values(surahs).filter(surah => files[surah.id]).map(surah => (
-                       <li
-                        key={surah.id}
-                        className={`list-group-item ${styles.row} ${(surah.id === currentSurah.id && currentQari.id === qari.id) ? `${styles.active}` : ''}`}
-                        onClick={() => this.handleSurahSelection(surah)}
-                      >
-                        <Row className={styles.surahRow}>
-                          <Col md={5} xs={8}>
-                            <Row>
-                              <Col md={2} xs={2}>
-                              <h5 className={styles.numbering}>
-                                <span className={styles.muted}>
-                                  <span className="index">{surah.id}.</span>
-                                  <i className="fa fa-play-circle fa-lg" />
-                                </span>
-                              </h5>
-                              </Col>
-                              <Col md={10} xs={10}>
-                                <h5 className={`text-muted`}>Surat {surah.name.simple}</h5>
-                              </Col>
-                            </Row>
-                          </Col>
-                          <Col md={5} className="text-right hidden-xs hidden-sm">
-                            <LinkContainer to={`/sura/${surah.id}`}>
-                                <Button
-                                bsStyle="primary"
-                                className={styles.options}
-                                onClick={(event) => event.stopPropagation()}>
-                                <i className="fa fa-users" /> Other Qaris
-                              </Button>
-                            </LinkContainer>
-                             <Button
-                              bsStyle="primary"
-                              className={styles.options}
-                              href={`https://www.quran.com/${surah.id}`}
-                              target="_blank"
-                              onClick={(event) => event.stopPropagation()}>
-                              <i className="fa fa-book" /> Read
-                            </Button>
-                            <Button
-                              bsStyle="primary"
-                              className={styles.options}
-                              href={`http://download.quranicaudio.com/quran/${qari.relativePath}${zeroPad(surah.id, 3)}.mp3`}
-                              target="_blank"
-                              onClick={(event) => event.stopPropagation()}
-                              download>
-                              <i className="fa fa-arrow-circle-down" /> Download
-                            </Button>
-                          </Col>
-                          <Col md={2} xs={4} className="text-right">
-                            <h5 className={`text-muted ${styles.muted}`}>
-                              {currentSurahTime(surah)}{formatSeconds(files[surah.id].format.duration)}
-                            </h5>
-                          </Col>
-                        </Row>
-                        {surah.id === currentSurah.id ? <Track progress={progress} simple style={progressBarStyle} /> : false}
-                      </li>
-                    ))
-                  }
-                </ul>
+              <SurahList {...this.props} handleSurahSelection={this.handleSurahSelection} />
               </div>
             </Col>
           </Row>
