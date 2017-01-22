@@ -2,6 +2,7 @@ import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import Track from './Track';
 import Common from './CommonAudio';
+import { cleanUpBrackets } from 'utils/cleanUp';
 import {
   load,
   play,
@@ -54,15 +55,19 @@ class MobilePlayer extends Component {
     this.handleTrackChange = Common.handleTrackChange.bind(this);
     this.handleFileLoad = Common.handleFileLoad.bind(this);
     this.handleRemoveFileListeneres = Common.handleRemoveFileListeneres.bind(this);
+
+    this.state = {
+      open: true
+    };
   }
 
-  state = {
-    open: false
-  };
   componentWillReceiveProps(nextProps) {
     if (this.props.surah !== nextProps.surah || this.props.qari !== nextProps.qari) {
       this.handleFileLoad(nextProps.file);
       this.handleRemoveFileListeneres(this.props.file);
+      this.setState({
+        open: true
+      });
     }
   }
 
@@ -145,17 +150,21 @@ class MobilePlayer extends Component {
     if (!surah) return false;
     const openPlayer = () => {
       if (open) {
-        document.querySelector('#content').style.overflowY = 'hidde';
+        document.querySelector('html').style.overflow = 'initial';
+        document.querySelector('html').style.position = 'initial  ';
       } else {
-        document.querySelector('#content').style.overflowY = 'auto';
+        document.querySelector('html').style.position = 'fixed';
+        document.querySelector('html').style.overflow = 'hidden';
       }
       this.setState({ open: !open });
     };
     return (
       <div className={`${style.audioplayer} ${isOpen}`}>
-        <i onClick={openPlayer} className={`fa fa-chevron-up ${style.chevron}`} aria-hidden="true"></i>
-        <h2 className={style.qariName}>{qari && qari.name}</h2>
-        <h3 className={style.surahName}>{`Surat ${surah.name.simple}`}</h3>
+        <div onClick={openPlayer}>
+          <i onClick={openPlayer} className={`fa fa-chevron-up ${style.chevron}`} alt="click to toggle" aria-hidden="true"></i>
+          <h2 className={style.qariName}>{qari && cleanUpBrackets(qari.name)}</h2>
+          <h3 className={style.surahName}>{`Surat ${surah.name.simple}`}</h3>
+        </div>
         {open && <div className={style.controlersContainer}>
           <div className={style.surahMisc}>
             <p> سورة {surah.name.arabic}</p>
@@ -163,7 +172,7 @@ class MobilePlayer extends Component {
           <div className={style.controls}>
             <ul className={style.timeline}>
               <li className={style.timelineItem}>{validFileTiming ? formatSeconds(file.currentTime) : '00:00'}</li>
-              <li className={style.track}><Track simple={false} progress={validFileTiming ? progress : 0} onTrackChange={this.handleTrackChange} style={{ background: '#5b5b5b' }} /></li>
+              <li className={style.track}><Track simple={false} progress={validFileTiming ? progress : 0 } showExpanded onTrackChange={this.handleTrackChange} style={{ background: '#5b5b5b' }} /></li>
               <li className={style.timelineItem}>{validFileTiming ? formatSeconds(file.duration) : '00:00'}</li>
             </ul>
             <div className={style.controlActions}>
