@@ -1,9 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import { connect } from 'react-redux';
 import { asyncConnect } from 'redux-connect';
-import Grid from 'react-bootstrap/lib/Grid';
-import Row from 'react-bootstrap/lib/Row';
-import Col from 'react-bootstrap/lib/Col';
 import Button from 'react-bootstrap/lib/Button';
 import Helmet from 'react-helmet';
 import { load, play, next, random } from 'actions/audioplayer';
@@ -53,27 +50,23 @@ class Qaris extends Component {
     return (
       <div>
         <Helmet title={`Holy Quran recritation by ${qari.name}`} />
-        <Grid
-          fluid
-          className={styles.reciterBackground}>
-          <Row>
-            <Col md={12} className="text-center">
-              <h1 className={styles.reciterName}>
-                {qari.name}
-              </h1>
-              <p className={styles.description} dangerouslySetInnerHTML={{ __html: description.replace(/\\/g, '') }} />
-              <div className={styles.buttonContain}>
-                <Button
-                  bsStyle="primary"
-                  className={`${styles.button} ${shouldRandom ? styles.shuffleAll : ''}`}
-                  onClick={handleShuffleAll}
-                  >
-                  <i className={`fa ${shouldRandom ? 'fa-stop' : 'fa-play'} ${styles.icon}`} /><span>Shuffle Play</span>
-                </Button>
-              </div>
-            </Col>
-          </Row>
-        </Grid>
+        <div className={styles.reciterBackground}>
+          <div className="text-center">
+            <h1 className={styles.reciterName}>
+              {qari.name}
+            </h1>
+            <p className={styles.description} dangerouslySetInnerHTML={{ __html: description.replace(/\\/g, '') }} />
+            <div className={styles.buttonContain}>
+              <Button
+                bsStyle="primary"
+                className={`${styles.button} ${shouldRandom ? styles.shuffleAll : ''}`}
+                onClick={handleShuffleAll}
+                >
+                <i className={`fa ${shouldRandom ? 'fa-stop' : 'fa-play'} ${styles.icon}`} /><span>Shuffle Play</span>
+              </Button>
+            </div>
+          </div>
+        </div>
         <SurahList {...this.props} handleSurahSelection={this.handleSurahSelection} />
       </div>
     );
