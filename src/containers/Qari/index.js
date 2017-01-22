@@ -39,7 +39,7 @@ class Qaris extends Component {
   render() {
     const { surahs, qari, files, currentSurah, shouldRandom } = this.props;
 
-    const handlePlayAll = () => {
+    const handleShuffleAll = () => {
       this.props.random();
       if (!shouldRandom) {
         const randomSurah = Math.floor(Math.random() * (113 + 1));
@@ -65,8 +65,8 @@ class Qaris extends Component {
               <div className={styles.buttonContain}>
                 <Button
                   bsStyle="primary"
-                  className={`${styles.button} ${shouldRandom ? styles.playAllActive : ''}`}
-                  onClick={handlePlayAll}
+                  className={`${styles.button} ${shouldRandom ? styles.shuffleAll : ''}`}
+                  onClick={handleShuffleAll}
                   >
                   <i className={`fa ${shouldRandom ? 'fa-stop' : 'fa-play'} ${styles.icon}`} /><span>Shuffle Play</span>
                 </Button>
@@ -74,9 +74,7 @@ class Qaris extends Component {
             </Col>
           </Row>
         </Grid>
-        <div className={styles.list}>
-          <SurahList {...this.props} handleSurahSelection={this.handleSurahSelection} />
-        </div>
+        <SurahList {...this.props} handleSurahSelection={this.handleSurahSelection} />
       </div>
     );
   }
