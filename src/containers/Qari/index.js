@@ -6,7 +6,7 @@ import Row from 'react-bootstrap/lib/Row';
 import Col from 'react-bootstrap/lib/Col';
 import Button from 'react-bootstrap/lib/Button';
 import Helmet from 'react-helmet';
-import { load, play, next, random} from 'actions/audioplayer';
+import { load, play, next, random } from 'actions/audioplayer';
 import { load as loadFiles } from 'actions/files';
 import SurahList from 'components/SurahList';
 const styles = require('./style.scss');
@@ -37,7 +37,7 @@ class Qaris extends Component {
   }
 
   render() {
-    const { surahs, qari, files, currentSurah, isPlaying, shouldRandom } = this.props;
+    const { surahs, qari, files, currentSurah, shouldRandom } = this.props;
 
     const handlePlayAll = () => {
       this.props.random();
@@ -61,7 +61,7 @@ class Qaris extends Component {
               <h1 className={styles.reciterName}>
                 {qari.name}
               </h1>
-              <p className={styles.description} dangerouslySetInnerHTML={{__html: description.replace(/\\/g, '')}} />
+              <p className={styles.description} dangerouslySetInnerHTML={{ __html: description.replace(/\\/g, '') }} />
               <div className={styles.buttonContain}>
                 <Button
                   bsStyle="primary"
@@ -74,15 +74,9 @@ class Qaris extends Component {
             </Col>
           </Row>
         </Grid>
-        <Grid className={styles.list}>
-          <Row>
-            <Col md={11} mdOffset={1}>
-              <div className={`panel panel-default ${styles.panel} ${isPlaying ? styles.panelPlaying : ''}`}>
-              <SurahList {...this.props} handleSurahSelection={this.handleSurahSelection} />
-              </div>
-            </Col>
-          </Row>
-        </Grid>
+        <div className={styles.list}>
+          <SurahList {...this.props} handleSurahSelection={this.handleSurahSelection} />
+        </div>
       </div>
     );
   }
@@ -100,7 +94,7 @@ const connectedQaris = connect(
     currentSurah: (state.audioplayer && state.audioplayer.surah) ? state.audioplayer.surah : {},
     currentQari: state.audioplayer.qari
   }),
-  { load, play, next, random}
+  { load, play, next, random }
 )(Qaris);
 
 export default asyncConnect([{
